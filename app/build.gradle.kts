@@ -91,4 +91,10 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation ("com.github.skydoves:landscapist-coil:1.4.7")
+
+    //implementation("androidx.lifecycle:lifecycle-viewmodel:2.7.0")
+    //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+
 }
