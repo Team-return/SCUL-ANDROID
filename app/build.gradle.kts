@@ -43,7 +43,7 @@ android {
         buildConfigField(
             type = "String",
             name = "BASE_URL",
-            value = properties.getProperty("BASE_URL_DEV", "\"\""),
+            value = properties.getProperty("BASE_URL", "\"\""),
         )
     }
     compileOptions {
@@ -96,5 +96,4 @@ dependencies {
     //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
-
 }
