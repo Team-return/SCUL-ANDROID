@@ -98,4 +98,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
     implementation ("androidx.compose.material:material:1.6.7")
+
+    implementation ("com.google.accompanist:accompanist-pager:0.20.1")
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }
