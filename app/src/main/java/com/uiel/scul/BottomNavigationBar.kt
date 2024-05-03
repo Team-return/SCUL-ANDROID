@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.uiel.scul.designSystem.foundation.SculColor
 import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
@@ -27,7 +28,9 @@ import com.uiel.scul.feature.search.SearchScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(
+    navController: NavController
+) {
     var selectedItem by remember { mutableStateOf(0) }
 
     Scaffold(
@@ -114,7 +117,7 @@ fun BottomNavigationBar() {
         }
     ) {
         when (selectedItem) {
-            0 -> HomeScreen()
+            0 -> HomeScreen(navController = navController)
             1 -> SearchScreen()
             2 -> MyPageScreen()
         }
