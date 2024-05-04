@@ -102,4 +102,8 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-pager:0.20.1")
 
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.maps.android:maps-compose:2.9.0")
 }
