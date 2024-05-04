@@ -1,81 +1,218 @@
 package com.uiel.scul.feature.home
 
+import android.content.Context
+import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.uiel.scul.R
 import com.uiel.scul.designSystem.foundation.SculColor
+import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
+import com.uiel.scul.model.culture.FetchCultureResponse
+import okhttp3.OkHttpClient
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
     Scaffold(
-        topBar = {}
+        topBar = {
+            Image(
+                modifier = Modifier.padding(
+                    top = 5.dp,
+                    bottom = 5.dp,
+                    start = 20.dp,
+                ),
+                painter = painterResource(id = R.drawable.ic_logo),
+                contentDescription = "",
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-//            Image(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 12.dp, bottom = 18.dp),
-//                painter = "",
-//                contentDescription = "",
-//            )
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 20.dp,
+                        top = 12.dp,
+                        bottom = 18.dp,
+                        end = 20.dp,
+                    ),
+                painter = painterResource(id = R.drawable.ic_banner),
+                contentDescription = "",
+                contentScale = ContentScale.Crop
+            )
             // 필터 선택
-            LazyColumn {
-
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+            ) {
+                items(uiState.culture.size) {
+                    ItemCard(
+                        moveToDetail = { navController.navigate("detail") },
+                        uiState = uiState.culture[it],
+                        context = context,
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ItemCard() {
+private fun Filter() {
+    Row {
+
+    }
+}
+
+@Composable
+private fun ItemCard(
+    moveToDetail: () -> Unit,
+    uiState: FetchCultureResponse,
+    context: Context,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(
+                onClick = moveToDetail
+            )
+            .border(
+                width = 0.5.dp,
+                shape = RoundedCornerShape(8.dp),
+                color = SculColor.GRAY100,
+            )
             .padding(
                 vertical = 12.dp,
                 horizontal = 16.dp,
-            )
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceAround,
     ) {
 //        Image(
-//            modifier = Modifier.fillMaxHeight(),
-//            painter = ,
+//            modifier = Modifier
+//                .fillMaxHeight(),
+//            painter = painterResource(id = R.drawable.ic_logo),
 //            contentDescription = "",
 //        )
-        Column {
+        val okHttpClient = OkHttpClient.Builder().build()
+
+        val imageLoader = ImageLoader.Builder(context)
+            .okHttpClient(okHttpClient)
+            .build()
+        AsyncImage(
+            modifier = Modifier.fillMaxHeight(),
+            model = ImageRequest.Builder(context)
+                .data("https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1708992268823K9FSITBI6ZV5QXVOC3BWB93WH")
+                //.addHeader("Accept","")
+                //.addHeader("Host","yeyak.seoul.go.kr")
+                //.addHeader("User-Agent","PostmanRuntime/7.38.0")
+                .crossfade(true)
+                .build(),
+            contentDescription = "",
+            onError = { Log.d("TEST",it.toString())},
+            error = painterResource(id = SculIcon.Logout),
+            imageLoader = imageLoader,
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(
+        ) {
             Text(
-                text = "서울 시립 미술관",
+                text = uiState.placeName,
                 style = SculTypography.SB3,
                 color = SculColor.BLACK
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
             Text(
-                text = "서울특벌시 가정북76 우정관",
+                text = uiState.location,
                 style = SculTypography.Body3,
                 color = SculColor.GRAY500,
             )
+            Spacer(modifier = Modifier.padding(top = 4.dp))
             Row {
-                //예약 가능 이용료 무료
+                Text(
+                    text = "이용료 ",
+                    style = SculTypography.Body3,
+                    color = SculColor.GRAY900,
+                )
+                Text(
+                    text = uiState.ticketPrice,
+                    style = SculTypography.Body3,
+                    color = SculColor.MAIN700
+                )
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row {
+                uiState.wantedPeople.split(",").apply {
+                    this.forEach {
+                        Text(
+                            modifier = Modifier
+                                .background(
+                                    color = SculColor.MAIN500,
+                                    shape = RoundedCornerShape(20.dp),
+                                )
+                                .padding(
+                                    vertical = 6.dp,
+                                    horizontal = 10.dp
+                                ),
+                            text = it,
+                            style = SculTypography.Body3,
+                            color = SculColor.WHITE,
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                }
+            }
+
         }
+        Spacer(modifier = Modifier.weight(1f))
         IconButton(
             onClick = { /*TODO*/ }
         ) {
-
+            Image(
+                painter = painterResource(id = if (uiState.isBookMarked) SculIcon.BookMarkOn else SculIcon.BookMarkOff),
+                contentDescription = "",
+            )
         }
     }
+    Spacer(modifier = Modifier.height(16.dp))
 }
