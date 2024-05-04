@@ -10,4 +10,5 @@ object SculIcon {
     val BookMarkOff = R.drawable.ic_bookmark_off
     val Review = R.drawable.ic_review
     val Logout = R.drawable.ic_logout
+    val Cancel = R.drawable.ic_cancel
 }
