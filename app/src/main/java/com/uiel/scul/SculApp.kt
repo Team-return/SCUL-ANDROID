@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.uiel.scul.feature.detail.DetailScreen
 import com.uiel.scul.feature.login.LoginScreen
 import com.uiel.scul.feature.login.LoginViewModel
 
@@ -20,8 +21,11 @@ fun SculApp() {
                 navController = navController,
             )
         }
-        composable("home") {
-
+        composable("main") {
+            BottomNavigationBar(navController = navController)
+        }
+        composable("detail") {
+            DetailScreen(navController = navController)
         }
     }
 }
