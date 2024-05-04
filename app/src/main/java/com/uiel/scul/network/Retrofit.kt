@@ -1,13 +1,13 @@
 package com.uiel.scul.network
 
 import com.uiel.scul.BuildConfig
+import com.uiel.scul.network.api.CultureApi
 import com.uiel.scul.network.api.UsersApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
-
 object Retrofit {
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(
@@ -22,5 +22,6 @@ object Retrofit {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val usersApi = retrofit.create(UsersApi::class.java)
+    val usersApi: UsersApi by lazy { retrofit.create(UsersApi::class.java) }
+    val cultureApi: CultureApi by lazy { retrofit.create(CultureApi::class.java) }
 }

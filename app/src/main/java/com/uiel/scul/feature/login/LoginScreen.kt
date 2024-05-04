@@ -43,7 +43,7 @@ fun LoginScreen(
         event.collect {
             when (it) {
                 is LoginViewModel.Event.NavigateToMain -> {
-                    navController.navigate("home")
+                    navController.navigate("main")
                 }
             }
         }
@@ -81,6 +81,7 @@ fun LoginScreen(
                         shape = RoundedCornerShape(4.dp)
                     ),
                 value = accountId,
+                singleLine = true,
                 onValueChange = { accountId = it },
                 decorationBox = { innerTextField ->
                     Row(
@@ -115,6 +116,7 @@ fun LoginScreen(
                         color = colorResource(id = R.color.gray_50),
                         shape = RoundedCornerShape(4.dp)
                     ),
+                singleLine = true,
                 value = password,
                 onValueChange = { password = it },
                 decorationBox = { innerTextField ->
@@ -182,7 +184,7 @@ fun LoginScreen(
                         password = password,
                     )
                 },
-                enabled = false,
+                enabled = accountId.isNotEmpty() && password.isNotEmpty(),
             ) {
                 Text(
                     modifier = Modifier.padding(vertical = 8.dp),

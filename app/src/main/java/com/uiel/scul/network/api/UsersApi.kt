@@ -1,17 +1,19 @@
 package com.uiel.scul.network.api
 
 import com.uiel.scul.model.user.LoginRequest
+import com.uiel.scul.model.user.LoginResponse
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface UsersApi {
 
-    @POST("/signup")
+    @POST("scul/users/signup")
     suspend fun signup(
 
     )
 
-    @POST("/login")
+    @POST("scul/users/login")
     suspend fun login(
-        loginRequest: LoginRequest,
-    )
+        @Body loginRequest: LoginRequest,
+    ): LoginResponse
 }
