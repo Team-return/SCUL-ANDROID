@@ -6,6 +6,7 @@ import com.uiel.scul.model.culture.FetchCulturesResponse
 import com.uiel.scul.model.culture.SearchCultureResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 
 interface CultureApi {
 
@@ -19,6 +20,7 @@ interface CultureApi {
     @GET("scul/cultures/detail/{culture-id}")
     suspend fun cultureDetail(
         @Header("Authorization") authorization: String,
+        @Path("culture-id") cultureId: String,
     ): CultureDetailResponse
 
     //문화 검색
