@@ -3,7 +3,7 @@ package com.uiel.scul.model.review
 import java.util.UUID
 
 data class FetchReviewsResponse(
-    val reviews: List<FetchReviewResponse>
+    val reviewList: List<FetchReviewResponse>
 )
 
 data class FetchReviewResponse(
