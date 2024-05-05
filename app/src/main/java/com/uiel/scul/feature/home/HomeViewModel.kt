@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
     private val cultureApi = Retrofit.cultureApi
-    private val accessToken = SculApplication.preferences.getString("AccessToken","")
+    private val accessToken = SculApplication.preferences.getString("AccessToken", "")
 
     private val _event = MutableSharedFlow<LoginViewModel.Event>()
     val event = _event.asSharedFlow()
@@ -26,12 +26,13 @@ class HomeViewModel : ViewModel() {
     init {
         getCultureList()
     }
+
     private fun getCultureList() = viewModelScope.launch(Dispatchers.IO) {
         runCatching {
             cultureApi.searchCultureList(
                 authorization = accessToken
             )
-        }.onSuccess {response->
+        }.onSuccess { response ->
             _uiState.update { it.copy(culture = response.culture) }
         }.onFailure {
 
