@@ -2,7 +2,6 @@ package com.uiel.scul.feature.detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +17,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -34,14 +36,21 @@ import com.google.accompanist.pager.rememberPagerState
 import com.uiel.scul.designSystem.foundation.SculColor
 import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
+import com.uiel.scul.model.culture.CultureDetailResponse
 import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreen(
-    navController: NavController
+    cultureId: String,
+    navController: NavController,
+    viewModel: DetailViewModel = viewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getDetailCulture(cultureId = cultureId)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -63,7 +72,7 @@ fun DetailScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "서울 시립 미술관",
+                text = uiState.placeName,
                 style = SculTypography.Heading3,
                 color = SculColor.BLACK,
             )
@@ -89,13 +98,13 @@ fun DetailScreen(
                 vertical = 16.dp,
             )
         ) {
-            Content(name = "전화번호", data = "041-1234-568")
+            Content(name = "전화번호", data = uiState.phoneNumber)
             Spacer(modifier = Modifier.height(16.dp))
-            Content(name = "주소", data = "종로구, 서울 시립간")
+            Content(name = "주소", data = uiState.location)
             Spacer(modifier = Modifier.height(16.dp))
-            Content(name = "이용시간", data = "08:00 ~ 14:00")
+            Content(name = "이용시간", data = "${uiState.serviceStartDate} ~ ${uiState.serviceEndDate}")
             Spacer(modifier = Modifier.height(16.dp))
-            Content(name = "접수 일정", data = "5월 6일 ~ 4월3일")
+            Content(name = "접수 일정", data = "${uiState.applicationStartDate} ~ ${uiState.applicationEndDate}")
             Spacer(modifier = Modifier.height(16.dp))
             Content(name = "운영 일정", data = "5월 6일 ~ 4월3일")
         }
@@ -105,7 +114,10 @@ fun DetailScreen(
                 .height(4.dp)
                 .background(SculColor.GRAY50)
         )
-        TabLayout()
+        TabLayout(
+            uiState = uiState,
+            cultureId = cultureId,
+        )
     }
 }
 
@@ -131,7 +143,10 @@ private fun Content(
 
 @Composable
 @OptIn(ExperimentalPagerApi::class)
-private fun TabLayout() {
+private fun TabLayout(
+    uiState: CultureDetailResponse,
+    cultureId: String,
+) {
     val pages = listOf("상세 정보", "리뷰")
     var selectedItem by remember { mutableStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
@@ -165,8 +180,8 @@ private fun TabLayout() {
             state = pagerState,
         ) {page ->
             when(page) {
-                0 -> DetailInfoScreen()
-                1 -> DetailReviewScreen()
+                0 -> DetailInfoScreen(uiState = uiState)
+                1 -> DetailReviewScreen(cultureId = cultureId)
             }
         }
     }
