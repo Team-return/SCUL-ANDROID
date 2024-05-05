@@ -58,7 +58,7 @@ class DetailViewModel : ViewModel() {
     }
 }
 
-fun getDefaultState(): CultureDetailResponse {
+private fun getDefaultState(): CultureDetailResponse {
     return CultureDetailResponse(
         id = UUID.randomUUID(),
         location = "",
