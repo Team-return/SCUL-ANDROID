@@ -5,7 +5,7 @@ import java.util.UUID
 data class CultureDetailResponse(
     val id: UUID,
     val location: String,
-    val placeHolder: String,
+    val placeName: String,
     val ticketPrice: String,
     val isBookMarked: Boolean,
     val imageUrl: String,
@@ -18,6 +18,6 @@ data class CultureDetailResponse(
     val serviceStartDate: String,
     val serviceEndDate: String,
     val cultureLink: String,
-    val ycoordinate: Long,
-    val xcoordinate: Long
+    val ycoordinate: Float,
+    val xcoordinate: Float,
 )
