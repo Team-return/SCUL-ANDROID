@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,8 +23,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -44,6 +49,7 @@ import okhttp3.OkHttpClient
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: HomeViewModel = viewModel()
 ) {
@@ -63,7 +69,7 @@ fun HomeScreen(
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
@@ -90,6 +96,7 @@ fun HomeScreen(
                         moveToDetail = { navController.navigate("detail/${uiState.culture[it].id}") },
                         uiState = uiState.culture[it],
                         context = context,
+                        onBookMarkClick = { viewModel.bookMarkClick(uiState.culture[it].id.toString())},
                     )
                 }
             }
@@ -109,7 +116,9 @@ private fun ItemCard(
     moveToDetail: () -> Unit,
     uiState: FetchCultureResponse,
     context: Context,
+    onBookMarkClick: () -> Unit,
 ) {
+    var isBookMarked by remember { mutableStateOf(uiState.isBookMarked) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,7 +144,7 @@ private fun ItemCard(
 //            contentDescription = "",
 //        )
         val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor{
+            .addInterceptor {
                 val originalRequest = it.request()
 
                 val newRequest = originalRequest.newBuilder()
@@ -159,7 +168,7 @@ private fun ItemCard(
                 .crossfade(true)
                 .build(),
             contentDescription = "",
-            onError = { Log.d("TEST",it.toString())},
+            onError = { Log.d("TEST", it.toString()) },
             error = painterResource(id = SculIcon.Logout),
             imageLoader = imageLoader,
         )
@@ -216,10 +225,14 @@ private fun ItemCard(
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
-            onClick = { /*TODO*/ }
+            onClick = {
+                onBookMarkClick()
+                isBookMarked = !isBookMarked
+            }
         ) {
             Image(
-                painter = painterResource(id = if (uiState.isBookMarked) SculIcon.BookMarkOn else SculIcon.BookMarkOff),
+                modifier = Modifier.size(20.dp),
+                painter = painterResource(id = if (isBookMarked) SculIcon.BookMarkOn else SculIcon.BookMarkOff),
                 contentDescription = "",
             )
         }

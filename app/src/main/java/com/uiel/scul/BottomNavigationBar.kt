@@ -36,9 +36,7 @@ fun BottomNavigationBar(
     Scaffold(
         bottomBar = {
             BottomNavigation(
-                modifier = Modifier.padding(vertical = 12.dp),
                 backgroundColor = SculColor.WHITE,
-                elevation = 0.dp,
             ) {
                 BottomNavigationItem(
                     selectedContentColor = SculColor.MAIN500,
@@ -55,7 +53,7 @@ fun BottomNavigationBar(
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                         }
-                        
+
                     },
                     label = {
                         Text(
@@ -115,11 +113,20 @@ fun BottomNavigationBar(
                 )
             }
         }
-    ) {
+    ) { paddingValues ->
         when (selectedItem) {
-            0 -> HomeScreen(navController = navController)
-            1 -> SearchScreen()
-            2 -> MyPageScreen()
+            0 -> HomeScreen(
+                modifier = Modifier.padding(paddingValues),
+                navController = navController
+            )
+
+            1 -> SearchScreen(
+                modifier = Modifier.padding(paddingValues)
+            )
+
+            2 -> MyPageScreen(
+                modifier = Modifier.padding(paddingValues)
+            )
         }
     }
 }

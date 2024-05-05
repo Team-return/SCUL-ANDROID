@@ -31,10 +31,12 @@ import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(
+    modifier: Modifier = Modifier,
+) {
     var inputText by remember { mutableStateOf("") }
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         BasicTextField(

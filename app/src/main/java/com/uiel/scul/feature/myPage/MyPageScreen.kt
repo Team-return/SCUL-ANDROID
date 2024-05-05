@@ -28,7 +28,9 @@ import com.uiel.scul.designSystem.foundation.SculTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyPageScreen() {
+fun MyPageScreen(
+    modifier: Modifier = Modifier,
+) {
     Scaffold(
         topBar = {
 //            TopAppBar(
@@ -57,7 +59,7 @@ fun MyPageScreen() {
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
