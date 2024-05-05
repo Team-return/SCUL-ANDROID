@@ -87,7 +87,7 @@ fun HomeScreen(
             ) {
                 items(uiState.culture.size) {
                     ItemCard(
-                        moveToDetail = { navController.navigate("detail") },
+                        moveToDetail = { navController.navigate("detail/${uiState.culture[it].id}") },
                         uiState = uiState.culture[it],
                         context = context,
                     )
@@ -134,7 +134,17 @@ private fun ItemCard(
 //            painter = painterResource(id = R.drawable.ic_logo),
 //            contentDescription = "",
 //        )
-        val okHttpClient = OkHttpClient.Builder().build()
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor{
+                val originalRequest = it.request()
+
+                val newRequest = originalRequest.newBuilder()
+                    .addHeader("Host", "yeyak.seoul.go.kr") // 원하는 Host 헤더로 교체합니다.
+                    .build()
+
+                it.proceed(newRequest)
+            }
+            .build()
 
         val imageLoader = ImageLoader.Builder(context)
             .okHttpClient(okHttpClient)
