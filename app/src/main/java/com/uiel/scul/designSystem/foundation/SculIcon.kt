@@ -11,4 +11,6 @@ object SculIcon {
     val Review = R.drawable.ic_review
     val Logout = R.drawable.ic_logout
     val Cancel = R.drawable.ic_cancel
+    val CloseEye = R.drawable.ic_close_eye
+    val OpenEye = R.drawable.ic_open_eye
 }
