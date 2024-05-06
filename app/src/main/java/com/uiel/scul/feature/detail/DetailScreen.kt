@@ -15,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,6 +40,7 @@ import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
 import com.uiel.scul.model.culture.CultureDetailResponse
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 @Composable
 fun DetailScreen(
@@ -104,7 +107,10 @@ fun DetailScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Content(name = "이용시간", data = "${uiState.serviceStartDate} ~ ${uiState.serviceEndDate}")
             Spacer(modifier = Modifier.height(16.dp))
-            Content(name = "접수 일정", data = "${uiState.applicationStartDate} ~ ${uiState.applicationEndDate}")
+            Content(
+                name = "접수 일정",
+                data = "${uiState.applicationStartDate} ~ ${uiState.applicationEndDate}"
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Content(name = "운영 일정", data = "5월 6일 ~ 4월3일")
         }
@@ -148,13 +154,18 @@ private fun TabLayout(
     cultureId: String,
 ) {
     val pages = listOf("상세 정보", "리뷰")
-    var selectedItem by remember { mutableStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
 
     Column {
         TabRow(
-            selectedTabIndex = pagerState.currentPage
+            selectedTabIndex = pagerState.currentPage,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                    color = SculColor.MAIN400,
+                )
+            }
         ) {
             pages.forEachIndexed { index, title ->
                 Tab(
@@ -162,7 +173,7 @@ private fun TabLayout(
                         Text(
                             text = title,
                             style = SculTypography.Body2,
-                            color = if(pagerState.currentPage == index) SculColor.BLACK else SculColor.GRAY500,
+                            color = if (pagerState.currentPage == index) SculColor.BLACK else SculColor.GRAY500,
                         )
                     },
                     selected = pagerState.currentPage == index,
@@ -178,8 +189,8 @@ private fun TabLayout(
         HorizontalPager(
             count = pages.size,
             state = pagerState,
-        ) {page ->
-            when(page) {
+        ) { page ->
+            when (page) {
                 0 -> DetailInfoScreen(uiState = uiState)
                 1 -> DetailReviewScreen(cultureId = cultureId)
             }
