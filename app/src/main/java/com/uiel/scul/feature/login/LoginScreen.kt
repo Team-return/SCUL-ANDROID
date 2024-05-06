@@ -8,26 +8,36 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.uiel.scul.R
 import com.uiel.scul.designSystem.foundation.SculColor
+import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
 
 @Composable
@@ -38,6 +48,7 @@ fun LoginScreen(
     val event = viewModel.event
     var accountId by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(event) {
         event.collect {
@@ -96,7 +107,11 @@ fun LoginScreen(
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         if (accountId.isEmpty()) {
-                            Text(text = "아이디")
+                            Text(
+                                text = "아이디",
+                                style = SculTypography.Caption2,
+                                color = SculColor.GRAY400,
+                            )
                         }
                         innerTextField()
                     }
@@ -119,22 +134,37 @@ fun LoginScreen(
                 singleLine = true,
                 value = password,
                 onValueChange = { password = it },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 decorationBox = { innerTextField ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                start = 12.dp,
-                                top = 13.dp,
-                                bottom = 13.dp,
+                                horizontal = 12.dp,
+                                vertical = 13.dp,
                             ),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         if (password.isEmpty()) {
-                            Text(text = "비밀번호")
+                            Text(
+                                text = "비밀번호",
+                                style = SculTypography.Caption2,
+                                color = SculColor.GRAY400,
+                            )
                         }
                         innerTextField()
+                        Spacer(modifier = Modifier.weight(1f))
+                        IconButton(
+                            modifier = Modifier.size(20.dp),
+                            onClick = { passwordVisible = !passwordVisible }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = if(passwordVisible) SculIcon.OpenEye else SculIcon.CloseEye),
+                                contentDescription = ""
+                            )
+                        }
                     }
                 }
             )
