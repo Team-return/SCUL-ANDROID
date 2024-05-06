@@ -18,6 +18,6 @@ data class CultureDetailResponse(
     val serviceStartDate: String,
     val serviceEndDate: String,
     val cultureLink: String,
-    val ycoordinate: Float,
-    val xcoordinate: Float,
+    val ycoordinate: Double,
+    val xcoordinate: Double,
 )

@@ -1,7 +1,5 @@
 package com.uiel.scul.feature.detail
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -22,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.google.android.gms.maps.LocationSource
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -110,10 +107,11 @@ fun DetailInfoScreen(
             yCoordinate = uiState.ycoordinate,
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(4.dp)
-            .background(color = SculColor.GRAY50)
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp)
+                .background(color = SculColor.GRAY50)
         )
         Column(
             modifier = Modifier
@@ -135,10 +133,11 @@ fun DetailInfoScreen(
                 color = SculColor.MAIN600,
             )
         }
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(4.dp)
-            .background(color = SculColor.GRAY50)
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp)
+                .background(color = SculColor.GRAY50)
         )
         Row(
             modifier = Modifier
@@ -183,17 +182,11 @@ fun DetailInfoScreen(
 @Composable
 private fun Location(
     location: String,
-    xCoordinate: Float,
-    yCoordinate: Float,
+    xCoordinate: Double,
+    yCoordinate: Double,
 ) {
-    val latitude = yCoordinate.toDouble()
-    val longitude = xCoordinate.toDouble()
-    val latLng = LatLng(latitude, longitude)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(latLng, 14f)
-    }
+    val latLng = LatLng(yCoordinate, xCoordinate)
 
-    Log.d("TEST",latLng.toString())
     Row(
         modifier = Modifier.padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -211,18 +204,23 @@ private fun Location(
         )
     }
     Spacer(modifier = Modifier.height(12.dp))
-    GoogleMap(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .height(160.dp)
-            .clip(RoundedCornerShape(8.dp)),
-        cameraPositionState = cameraPositionState,
-        onMapLoaded = { Log.d("TEST","load")}
-    ) {
-        Log.d("TEST2","in")
-        Marker(
-            state = MarkerState(position = latLng),
-            title = location,
-        )
+    if (latLng.latitude != 0.0 && latLng.longitude != 0.0) {
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(latLng, 14f)
+        }
+
+        GoogleMap(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .height(160.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            cameraPositionState = cameraPositionState,
+        ) {
+            Marker(
+                state = MarkerState(position = latLng),
+                title = location,
+            )
+        }
     }
+
 }

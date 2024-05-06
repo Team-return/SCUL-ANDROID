@@ -75,7 +75,7 @@ private fun getDefaultState(): CultureDetailResponse {
         serviceStartDate = "",
         serviceEndDate = "",
         cultureLink = "",
-        xcoordinate = 0f,
-        ycoordinate = 0f
+        xcoordinate = 0.0,
+        ycoordinate = 0.0,
     )
 }
