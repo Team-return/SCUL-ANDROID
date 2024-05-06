@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
     private val cultureApi = Retrofit.cultureApi
+    private val bookmarkApi = Retrofit.bookmarkApi
     private val accessToken = SculApplication.preferences.getString("AccessToken", "")
 
     private val _event = MutableSharedFlow<LoginViewModel.Event>()
@@ -34,6 +35,21 @@ class HomeViewModel : ViewModel() {
             )
         }.onSuccess { response ->
             _uiState.update { it.copy(culture = response.culture) }
+        }.onFailure {
+
+        }
+    }
+
+    fun bookMarkClick(
+        cultureId: String,
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        runCatching {
+            bookmarkApi.postBookMark(
+                authorization = accessToken,
+                cultureId = cultureId,
+            )
+        }.onSuccess {
+
         }.onFailure {
 
         }
