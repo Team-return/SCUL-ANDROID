@@ -12,25 +12,40 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import com.uiel.scul.designSystem.foundation.SculColor
 import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
+    navController: NavController,
+    viewModel: MyPageViewModel = viewModel()
 ) {
+    var isDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
 //            TopAppBar(
@@ -95,7 +110,7 @@ fun MyPageScreen(
             Row(
                 modifier = Modifier
                     .clickable(
-                        onClick = {}
+                        onClick = { navController.navigate("myReview") }
                     )
                     .fillMaxWidth()
                     .padding(
@@ -118,7 +133,7 @@ fun MyPageScreen(
             Row(
                 modifier = Modifier
                     .clickable(
-                        onClick = {}
+                        onClick = { navController.navigate("bookmark") }
                     )
                     .fillMaxWidth()
                     .padding(
@@ -151,7 +166,7 @@ fun MyPageScreen(
             Row(
                 modifier = Modifier
                     .clickable(
-                        onClick = {}
+                        onClick = { isDialog = !isDialog }
                     )
                     .fillMaxWidth()
                     .padding(
@@ -172,6 +187,79 @@ fun MyPageScreen(
                 )
             }
         }
+        if (isDialog) {
+            LogOutDialog(
+                onClickCancel = { isDialog = !isDialog },
+                onClickConfirm = { navController.navigate("login")},
+            )
+        }
     }
+}
 
+@Composable
+private fun LogOutDialog(
+    onClickCancel: () -> Unit,
+    onClickConfirm: () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onClickCancel
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = SculColor.WHITE,
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp)
+            ) {
+                Text(
+                    text = "SCUL에서 로그아웃 하시겠어요?",
+                    style = SculTypography.SB1,
+                    color = SculColor.BLACK,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "다시 로그인 할 때까지 사용할 수 없어요",
+                    style = SculTypography.Body2,
+                    color = SculColor.GRAY900,
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Row {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = SculColor.GRAY200
+                        ),
+                        onClick = onClickCancel,
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text(
+                            text = "취소",
+                            style = SculTypography.Button2,
+                            color = SculColor.WHITE,
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(22.dp))
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = SculColor.MAIN600
+                        ),
+                        onClick = onClickConfirm,
+                        shape = RoundedCornerShape(4.dp),
+                    ) {
+                        Text(
+                            text = "확인",
+                            style = SculTypography.Body2,
+                            color = SculColor.WHITE,
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
