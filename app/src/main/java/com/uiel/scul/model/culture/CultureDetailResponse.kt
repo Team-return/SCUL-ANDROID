@@ -13,6 +13,7 @@ data class CultureDetailResponse(
     val wantedPeople: String,
     val content: String,
     val phoneNumber: String,
+    val isApplicationAble: Boolean,
     val applicationStartDate: String,
     val applicationEndDate: String,
     val serviceStartDate: String,
