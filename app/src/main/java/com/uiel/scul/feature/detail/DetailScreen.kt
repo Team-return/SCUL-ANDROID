@@ -123,6 +123,7 @@ fun DetailScreen(
         TabLayout(
             uiState = uiState,
             cultureId = cultureId,
+            navController = navController,
         )
     }
 }
@@ -152,6 +153,7 @@ private fun Content(
 private fun TabLayout(
     uiState: CultureDetailResponse,
     cultureId: String,
+    navController: NavController,
 ) {
     val pages = listOf("상세 정보", "리뷰")
     val coroutineScope = rememberCoroutineScope()
@@ -191,8 +193,14 @@ private fun TabLayout(
             state = pagerState,
         ) { page ->
             when (page) {
-                0 -> DetailInfoScreen(uiState = uiState)
-                1 -> DetailReviewScreen(cultureId = cultureId)
+                0 -> DetailInfoScreen(
+                    uiState = uiState,
+                    navController = navController,
+                )
+                1 -> DetailReviewScreen(
+                    cultureId = cultureId,
+                    navController = navController,
+                )
             }
         }
     }

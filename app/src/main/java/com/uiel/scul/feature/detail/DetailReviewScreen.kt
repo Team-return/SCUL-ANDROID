@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.uiel.scul.designSystem.foundation.SculColor
 import com.uiel.scul.designSystem.foundation.SculTypography
 import com.uiel.scul.model.review.FetchReviewResponse
@@ -28,6 +29,7 @@ import com.uiel.scul.model.review.FetchReviewResponse
 @Composable
 fun DetailReviewScreen(
     cultureId: String,
+    navController: NavController,
     viewModel: DetailReviewViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -41,7 +43,7 @@ fun DetailReviewScreen(
             .fillMaxSize(),
     ) {
         if (uiState.reviewList.isEmpty()) {
-            NoReview()
+            NoReview(navController = navController)
         } else {
             uiState.reviewList.forEach {
                 ReviewItem(uiState = it)
@@ -91,7 +93,9 @@ private fun ReviewItem(
 }
 
 @Composable
-private fun NoReview() {
+private fun NoReview(
+    navController: NavController,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,7 +117,7 @@ private fun NoReview() {
                     horizontal = 56.dp,
                     vertical = 12.dp,
                 ),
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate("write") },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SculColor.MAIN400,
