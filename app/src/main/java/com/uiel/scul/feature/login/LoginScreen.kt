@@ -190,7 +190,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.padding(start = 4.dp))
                 Text(
                     modifier = Modifier.clickable(
-                        onClick = {}
+                        onClick = { navController.navigate("signup")}
                     ),
                     text = "회원가입 하기",
                     style = SculTypography.Body2,
