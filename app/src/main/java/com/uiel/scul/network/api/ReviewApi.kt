@@ -1,5 +1,6 @@
 package com.uiel.scul.network.api
 
+import com.uiel.scul.model.myreview.FetchMyReviewsResponse
 import com.uiel.scul.model.review.FetchReviewsResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -18,4 +19,10 @@ interface ReviewApi {
         @Header("Authorization") authorization: String,
         @Path("culture-id") cultureId: String,
     ): FetchReviewsResponse
+
+    //내가 작성한 리뷰 조회
+    @GET("scul/reviews")
+    suspend fun fetchMyReview(
+        @Header("Authorization") authorization: String,
+    ): FetchMyReviewsResponse
 }

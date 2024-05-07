@@ -1,11 +1,15 @@
 package com.uiel.scul.network.api
 
+import com.uiel.scul.model.culture.CreateImageResponse
 import com.uiel.scul.model.culture.CultureDetailResponse
 import com.uiel.scul.model.culture.FetchCultureTagResponse
 import com.uiel.scul.model.culture.FetchCulturesResponse
 import com.uiel.scul.model.culture.SearchCultureResponse
+import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface CultureApi {
@@ -34,4 +38,10 @@ interface CultureApi {
     suspend fun fetchCultureTag(
         @Header("Authorization") authorization: String,
     ): FetchCultureTagResponse
+
+    //이미지 url 생성
+    @POST("scul/cultures/image")
+    suspend fun createImage(
+        @Body file: RequestBody,
+    ): CreateImageResponse
 }
