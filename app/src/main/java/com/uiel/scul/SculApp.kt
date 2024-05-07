@@ -6,9 +6,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.uiel.scul.feature.bookmark.BookMarkScreen
 import com.uiel.scul.feature.detail.DetailScreen
 import com.uiel.scul.feature.login.LoginScreen
 import com.uiel.scul.feature.login.LoginViewModel
+import com.uiel.scul.feature.myReview.MyReviewScreen
+import com.uiel.scul.feature.signup.SignupScreen
+import com.uiel.scul.feature.write.WriteReviewScreen
 
 @Composable
 fun SculApp() {
@@ -23,8 +27,22 @@ fun SculApp() {
                 navController = navController,
             )
         }
+        composable("signup") {
+            SignupScreen(
+                navController = navController,
+            )
+        }
         composable("main") {
             BottomNavigationBar(navController = navController)
+        }
+        composable("write") {
+            WriteReviewScreen(navController = navController)
+        }
+        composable("myReview") {
+            MyReviewScreen(navController = navController)
+        }
+        composable("bookmark") {
+            BookMarkScreen(navController = navController)
         }
         composable(
             route = "detail/{cultureId}",
