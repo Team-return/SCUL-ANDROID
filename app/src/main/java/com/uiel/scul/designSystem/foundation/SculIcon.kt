@@ -13,4 +13,6 @@ object SculIcon {
     val Cancel = R.drawable.ic_cancel
     val CloseEye = R.drawable.ic_close_eye
     val OpenEye = R.drawable.ic_open_eye
+    val Back = R.drawable.ic_back
+    val Plus = R.drawable.ic_plus
 }
