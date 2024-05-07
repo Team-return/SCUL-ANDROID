@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.SCUL" parent="android:Theme.Material.Light.NoActionBar" >
+        <item name="android:colorPrimary">@color/white</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
