@@ -260,7 +260,6 @@ private fun ItemCard(
                     }
                 }
             }
-
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
