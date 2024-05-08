@@ -100,7 +100,7 @@ class WriteReviewViewModel : ViewModel() {
                 cultureId = cultureId,
                 writeReviewRequest = WriteReviewRequest(
                     content = content,
-                    imageUrls = urls
+                    imageUrls = urls,
                 )
             )
         }.onSuccess {
