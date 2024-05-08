@@ -16,6 +16,8 @@ data class CultureDetailResponse(
     val isApplicationAble: Boolean,
     val applicationStartDate: String,
     val applicationEndDate: String,
+    val serviceStartTime: String,
+    val serviceEndTime: String,
     val serviceStartDate: String,
     val serviceEndDate: String,
     val cultureLink: String,

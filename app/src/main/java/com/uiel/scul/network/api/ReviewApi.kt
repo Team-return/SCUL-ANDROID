@@ -2,6 +2,8 @@ package com.uiel.scul.network.api
 
 import com.uiel.scul.model.myreview.FetchMyReviewsResponse
 import com.uiel.scul.model.review.FetchReviewsResponse
+import com.uiel.scul.model.review.WriteReviewRequest
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
@@ -11,6 +13,8 @@ interface ReviewApi {
     //리뷰 작성
     suspend fun writeReview(
         @Header("Authorization") authorization: String,
+        @Path("culture-id") cultureId: String,
+        @Body writeReviewRequest: WriteReviewRequest,
     )
 
     //리뷰 조회

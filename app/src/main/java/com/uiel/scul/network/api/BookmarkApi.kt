@@ -8,13 +8,13 @@ import retrofit2.http.Path
 
 interface BookmarkApi {
 
-    @POST("scul/bookMarks/{culture-id}")
+    @POST("scul/bookmarks/{culture-id}")
     suspend fun postBookMark(
         @Header("Authorization") authorization: String,
         @Path("culture-id") cultureId: String,
     )
 
-    @GET("scul/bookMarks")
+    @GET("scul/bookmarks")
     suspend fun fetchBookMarkCulture(
         @Header("Authorization") authorization: String,
     ): FetchBookmarkCulturesResponse
