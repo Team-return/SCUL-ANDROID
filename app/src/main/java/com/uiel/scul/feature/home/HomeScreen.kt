@@ -2,6 +2,12 @@ package com.uiel.scul.feature.home
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,12 +24,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +37,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -40,6 +50,7 @@ import androidx.navigation.NavController
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.skydoves.landscapist.glide.GlideImage
 import com.uiel.scul.R
 import com.uiel.scul.designSystem.foundation.SculColor
 import com.uiel.scul.designSystem.foundation.SculIcon
@@ -91,14 +102,21 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
             ) {
-                items(uiState.culture.size) {
-                    ItemCard(
-                        moveToDetail = { navController.navigate("detail/${uiState.culture[it].id}") },
-                        uiState = uiState.culture[it],
-                        context = context,
-                        onBookMarkClick = { viewModel.bookMarkClick(uiState.culture[it].id.toString())},
-                    )
+                if(uiState.culture.isEmpty()) {
+                    items(10) {
+                        LoadingShimmerEffect()
+                    }
+                } else {
+                    items(uiState.culture.size) {
+                        ItemCard(
+                            moveToDetail = { navController.navigate("detail/${uiState.culture[it].id}") },
+                            uiState = uiState.culture[it],
+                            context = context,
+                            onBookMarkClick = { viewModel.bookMarkClick(uiState.culture[it].id.toString()) },
+                        )
+                    }
                 }
+
             }
         }
     }
@@ -168,10 +186,16 @@ private fun ItemCard(
                 .crossfade(true)
                 .build(),
             contentDescription = "",
-            onError = { Log.d("TEST", it.toString()) },
+            onError = {
+                Log.d("TEST", it.toString())
+            },
             error = painterResource(id = SculIcon.Logout),
             imageLoader = imageLoader,
         )
+        GlideImage(
+            imageModel = "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1708992268823K9FSITBI6ZV5QXVOC3BWB93WH",
+
+            )
         Spacer(modifier = Modifier.width(16.dp))
         Column(
         ) {
@@ -188,6 +212,17 @@ private fun ItemCard(
             )
             Spacer(modifier = Modifier.padding(top = 4.dp))
             Row {
+                Text(
+                    text = "예약 ",
+                    style = SculTypography.Body3,
+                    color = SculColor.GRAY900,
+                )
+                Text(
+                    text = if (uiState.isApplicationAble) "가능" else "불가능",
+                    style = SculTypography.Body3,
+                    color = SculColor.MAIN700,
+                )
+                Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = "이용료 ",
                     style = SculTypography.Body3,
@@ -236,6 +271,105 @@ private fun ItemCard(
                 contentDescription = "",
             )
         }
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+fun LoadingShimmerEffect() {
+    val shimmerColors = listOf(
+        Color.LightGray.copy(alpha = 0.6f),
+        Color.LightGray.copy(alpha = 0.2f),
+        Color.LightGray.copy(alpha = 0.6f),
+    )
+
+    val transition = rememberInfiniteTransition()
+    val translateAnim = transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1000f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 500,
+                easing = FastOutSlowInEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        ), label = ""
+    )
+
+    val brush = Brush.linearGradient(
+        colors = shimmerColors,
+        start = Offset.Zero,
+        end = Offset(x = translateAnim.value, y = translateAnim.value)
+    )
+
+    ShimmerGridItem(brush = brush)
+}
+
+@Composable
+private fun ShimmerGridItem(brush: Brush) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 0.5.dp,
+                shape = RoundedCornerShape(8.dp),
+                color = SculColor.GRAY100,
+            )
+            .padding(
+                vertical = 12.dp,
+                horizontal = 16.dp,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceAround,
+    ) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxHeight()
+                .clip(RoundedCornerShape(4.dp))
+                .background(brush)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Spacer(
+                modifier = Modifier
+                    .height(17.dp)
+                    .width(100.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(brush)
+            )
+            Spacer(modifier = Modifier.padding(top = 4.dp))
+            Spacer(
+                modifier = Modifier
+                    .height(12.dp)
+                    .width(120.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(brush)
+            )
+            Spacer(modifier = Modifier.padding(top = 4.dp))
+            Spacer(
+                modifier = Modifier
+                    .height(12.dp)
+                    .width(100.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(brush)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(
+                modifier = Modifier
+                    .height(24.dp)
+                    .width(50.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(brush)
+            )
+
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Spacer(
+            modifier = Modifier
+                .size(20.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(brush)
+        )
     }
     Spacer(modifier = Modifier.height(16.dp))
 }
