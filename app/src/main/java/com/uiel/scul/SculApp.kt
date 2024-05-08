@@ -36,12 +36,18 @@ fun SculApp() {
             BottomNavigationBar(navController = navController)
         }
         composable(
-            route = "write/{cultureId}",
-            arguments = listOf(navArgument("cultureId") {
-                type = NavType.StringType
-            })
+            route = "write/{placeName}/{cultureId}",
+            arguments = listOf(
+                navArgument("placeName") {
+                    type = NavType.StringType
+                },
+                navArgument("cultureId") {
+                    type = NavType.StringType
+                },
+            )
         ) {
             WriteReviewScreen(
+                placeName = it.arguments?.getString("placeName") ?: "",
                 cultureId = it.arguments?.getString("cultureId") ?: "",
                 navController = navController,
             )
