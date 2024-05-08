@@ -15,4 +15,5 @@ object SculIcon {
     val OpenEye = R.drawable.ic_open_eye
     val Back = R.drawable.ic_back
     val Plus = R.drawable.ic_plus
+    val Find = R.drawable.ic_find
 }
