@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -49,82 +50,105 @@ fun DetailScreen(
     viewModel: DetailViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var isBookMarked by remember { mutableStateOf(uiState.isBookMarked) }
+
 
     LaunchedEffect(Unit) {
         viewModel.getDetailCulture(cultureId = cultureId)
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
-
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = SculIcon.Search),
-            contentDescription = "",
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    vertical = 12.dp,
-                    horizontal = 20.dp,
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = uiState.placeName,
-                style = SculTypography.Heading3,
-                color = SculColor.BLACK,
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                onClick = { /*TODO*/ }
-            ) {
+    Scaffold(
+        topBar = {
+            IconButton(onClick = { navController.navigateUp() }) {
                 Icon(
-                    painter = painterResource(id = SculIcon.BookMarkOff),
+                    painter = painterResource(id = SculIcon.Back),
                     contentDescription = "",
                 )
             }
         }
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(SculColor.GRAY50)
-        )
+    ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(
-                horizontal = 20.dp,
-                vertical = 16.dp,
-            )
-        ) {
-            Content(name = "전화번호", data = uiState.phoneNumber)
-            Spacer(modifier = Modifier.height(16.dp))
-            Content(name = "주소", data = uiState.location)
-            Spacer(modifier = Modifier.height(16.dp))
-            Content(name = "이용시간", data = "${uiState.serviceStartDate} ~ ${uiState.serviceEndDate}")
-            Spacer(modifier = Modifier.height(16.dp))
-            Content(
-                name = "접수 일정",
-                data = "${uiState.applicationStartDate} ~ ${uiState.applicationEndDate}"
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Content(name = "운영 일정", data = "5월 6일 ~ 4월3일")
-        }
-        Spacer(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .background(SculColor.GRAY50)
-        )
-        TabLayout(
-            uiState = uiState,
-            cultureId = cultureId,
-            navController = navController,
-        )
+                .fillMaxSize()
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(id = SculIcon.Search),
+                contentDescription = "",
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = 12.dp,
+                        horizontal = 20.dp,
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = uiState.placeName,
+                    style = SculTypography.Heading3,
+                    color = SculColor.BLACK,
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = {
+                        viewModel.bookMark(cultureId)
+                        isBookMarked = !isBookMarked
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = if (isBookMarked) SculIcon.BookMarkOn else SculIcon.BookMarkOff),
+                        contentDescription = "",
+                        tint = SculColor.MAIN400,
+                    )
+                }
+            }
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(SculColor.GRAY50)
+            )
+            Column(
+                modifier = Modifier.padding(
+                    horizontal = 20.dp,
+                    vertical = 16.dp,
+                )
+            ) {
+                Content(name = "전화번호", data = uiState.phoneNumber)
+                Spacer(modifier = Modifier.height(16.dp))
+                Content(name = "주소", data = uiState.location)
+                Spacer(modifier = Modifier.height(16.dp))
+                Content(
+                    name = "이용시간",
+                    data = "${uiState.serviceStartTime} ~ ${uiState.serviceEndTime}"
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Content(
+                    name = "접수 일정",
+                    data = "${uiState.applicationStartDate} ~ ${uiState.applicationEndDate}"
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Content(
+                    name = "운영 일정",
+                    data = "${uiState.serviceStartDate} ~ ${uiState.serviceEndDate}"
+                )
+            }
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp)
+                    .background(SculColor.GRAY50)
+            )
+            TabLayout(
+                uiState = uiState,
+                cultureId = cultureId,
+                navController = navController,
+            )
+        }
     }
 }
 
@@ -194,9 +218,11 @@ private fun TabLayout(
         ) { page ->
             when (page) {
                 0 -> DetailInfoScreen(
+                    cultureId = cultureId,
                     uiState = uiState,
                     navController = navController,
                 )
+
                 1 -> DetailReviewScreen(
                     cultureId = cultureId,
                     navController = navController,

@@ -1,7 +1,10 @@
 package com.uiel.scul.feature.detail
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +36,7 @@ import com.uiel.scul.model.culture.CultureDetailResponse
 
 @Composable
 fun DetailInfoScreen(
+    cultureId: String,
     uiState: CultureDetailResponse,
     navController: NavController,
 ) {
@@ -130,6 +134,12 @@ fun DetailInfoScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
+                modifier = Modifier.clickable(
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uiState.cultureLink))
+                        context.startActivity(intent)
+                    }
+                ),
                 text = uiState.cultureLink,
                 style = SculTypography.Caption2,
                 color = SculColor.MAIN600,
@@ -169,7 +179,7 @@ fun DetailInfoScreen(
                     disabledContainerColor = SculColor.MAIN300,
                 ),
                 shape = RoundedCornerShape(8.dp),
-                onClick = { navController.navigate("write") }
+                onClick = { navController.navigate("write/$cultureId") }
             ) {
                 Text(
                     text = "리뷰 작성하기",

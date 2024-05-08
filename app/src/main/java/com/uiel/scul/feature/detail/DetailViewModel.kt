@@ -15,6 +15,7 @@ import java.util.UUID
 
 class DetailViewModel : ViewModel() {
     private val cultureApi = Retrofit.cultureApi
+    private val bookmarkApi = Retrofit.bookmarkApi
     private val accessToken = SculApplication.preferences.getString("AccessToken", "")
 
     private val _uiState = MutableStateFlow(getDefaultState())
@@ -42,8 +43,11 @@ class DetailViewModel : ViewModel() {
                         wantedPeople = wantedPeople,
                         content = content,
                         phoneNumber = phoneNumber,
+                        isApplicationAble = isApplicationAble,
                         applicationStartDate = applicationStartDate,
                         applicationEndDate = applicationEndDate,
+                        serviceStartTime = serviceStartTime,
+                        serviceEndTime = serviceEndTime,
                         serviceStartDate = serviceStartDate,
                         serviceEndDate = serviceEndDate,
                         cultureLink = cultureLink,
@@ -54,6 +58,21 @@ class DetailViewModel : ViewModel() {
             }
         }.onFailure {
             Log.d("TEST2",it.toString())
+        }
+    }
+
+    fun bookMark(
+        cultureId: String,
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        runCatching {
+            bookmarkApi.postBookMark(
+                authorization = accessToken,
+                cultureId = cultureId,
+            )
+        }.onSuccess {
+
+        }.onFailure {
+
         }
     }
 }
@@ -70,8 +89,11 @@ private fun getDefaultState(): CultureDetailResponse {
         wantedPeople = "",
         content = "",
         phoneNumber = "",
+        isApplicationAble = false,
         applicationStartDate = "",
         applicationEndDate = "",
+        serviceStartTime = "",
+        serviceEndTime = "",
         serviceStartDate = "",
         serviceEndDate = "",
         cultureLink = "",
