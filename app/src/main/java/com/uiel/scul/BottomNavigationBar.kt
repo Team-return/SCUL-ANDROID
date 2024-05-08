@@ -121,7 +121,8 @@ fun BottomNavigationBar(
             )
 
             1 -> SearchScreen(
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
+                navController = navController,
             )
 
             2 -> MyPageScreen(
