@@ -28,6 +28,7 @@ import com.uiel.scul.model.review.FetchReviewResponse
 
 @Composable
 fun DetailReviewScreen(
+    placeName: String,
     cultureId: String,
     navController: NavController,
     viewModel: DetailReviewViewModel = viewModel()
@@ -43,7 +44,11 @@ fun DetailReviewScreen(
             .fillMaxSize(),
     ) {
         if (uiState.reviewList.isEmpty()) {
-            NoReview(navController = navController)
+            NoReview(
+                navController = navController,
+                cultureId = cultureId,
+                placeName = placeName,
+            )
         } else {
             uiState.reviewList.forEach {
                 ReviewItem(uiState = it)
@@ -95,6 +100,8 @@ private fun ReviewItem(
 @Composable
 private fun NoReview(
     navController: NavController,
+    cultureId: String,
+    placeName: String,
 ) {
     Column(
         modifier = Modifier
@@ -117,7 +124,7 @@ private fun NoReview(
                     horizontal = 56.dp,
                     vertical = 12.dp,
                 ),
-            onClick = { navController.navigate("write") },
+            onClick = { navController.navigate("write/{$placeName}/{$cultureId}") },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SculColor.MAIN400,

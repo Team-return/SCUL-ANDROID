@@ -179,7 +179,7 @@ fun DetailInfoScreen(
                     disabledContainerColor = SculColor.MAIN300,
                 ),
                 shape = RoundedCornerShape(8.dp),
-                onClick = { navController.navigate("write/$cultureId") }
+                onClick = { navController.navigate("write/${uiState.placeName}/$cultureId") }
             ) {
                 Text(
                     text = "리뷰 작성하기",

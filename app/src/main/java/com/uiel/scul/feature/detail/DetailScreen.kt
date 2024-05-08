@@ -224,6 +224,7 @@ private fun TabLayout(
                 )
 
                 1 -> DetailReviewScreen(
+                    placeName = uiState.placeName,
                     cultureId = cultureId,
                     navController = navController,
                 )
