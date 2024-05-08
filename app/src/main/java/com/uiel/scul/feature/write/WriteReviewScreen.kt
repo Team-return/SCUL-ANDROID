@@ -31,22 +31,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.uiel.scul.R
 import com.uiel.scul.designSystem.foundation.SculColor
 import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
-import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
 
 @Composable
 fun WriteReviewScreen(
+    cultureId: String,
     navController: NavController,
     viewModel: WriteReviewViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
     var content by remember { mutableStateOf("") }
 
     val activityResultLauncher = rememberLauncherForActivityResult(
@@ -80,8 +83,12 @@ fun WriteReviewScreen(
             Text(
                 modifier = Modifier
                     .clickable(
-                        enabled = true,
-                        onClick = {},
+                        enabled = content.isNotEmpty(),
+                        onClick = { viewModel.writeReview(
+                            context = context,
+                            cultureId = cultureId,
+                            content = content,
+                        )},
                     ),
                 text = "리뷰 등록",
                 style = SculTypography.Label1,
@@ -205,6 +212,5 @@ fun WriteReviewScreen(
                 )
             }
         }
-
     }
 }
