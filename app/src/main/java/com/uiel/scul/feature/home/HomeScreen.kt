@@ -324,7 +324,7 @@ private fun ShimmerGridItem(brush: Brush) {
     ) {
         Spacer(
             modifier = Modifier
-                .fillMaxHeight()
+                .size(80.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .background(brush)
         )
