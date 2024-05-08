@@ -75,18 +75,19 @@ fun BookMarkScreen(
                 style = SculTypography.SB1,
                 color = SculColor.BLACK,
             )
-        }
-        LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-        ) {
-            items(uiState.culture.size) {
-                BookMarkItem(
-                    moveToDetail = { navController.navigate("detail/${uiState.culture[it].id}") },
-                    uiState = uiState.culture[it],
-                    context = context,
-                    onBookMarkClick = { viewModel.bookMarkClick(uiState.culture[it].id.toString()) },
-                )
+            Spacer(modifier = Modifier.height(24.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+            ) {
+                items(uiState.culture.size) {
+                    BookMarkItem(
+                        moveToDetail = { navController.navigate("detail/${uiState.culture[it].id}") },
+                        uiState = uiState.culture[it],
+                        context = context,
+                        onBookMarkClick = { viewModel.bookMarkClick(uiState.culture[it].id.toString()) },
+                    )
+                }
             }
         }
     }
