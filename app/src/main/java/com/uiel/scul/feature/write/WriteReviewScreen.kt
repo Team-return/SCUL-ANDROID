@@ -45,6 +45,7 @@ import com.uiel.scul.designSystem.foundation.SculTypography
 
 @Composable
 fun WriteReviewScreen(
+    placeName: String,
     cultureId: String,
     navController: NavController,
     viewModel: WriteReviewViewModel = viewModel(),
@@ -84,15 +85,17 @@ fun WriteReviewScreen(
                 modifier = Modifier
                     .clickable(
                         enabled = content.isNotEmpty(),
-                        onClick = { viewModel.writeReview(
-                            context = context,
-                            cultureId = cultureId,
-                            content = content,
-                        )},
+                        onClick = {
+                            viewModel.writeReview(
+                                context = context,
+                                cultureId = cultureId,
+                                content = content,
+                            )
+                        },
                     ),
                 text = "리뷰 등록",
                 style = SculTypography.Label1,
-                color = SculColor.GRAY400,
+                color = if (content.isEmpty()) SculColor.GRAY400 else SculColor.MAIN500,
             )
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -116,7 +119,7 @@ fun WriteReviewScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "서울 시립 미술관",
+                text = placeName,
                 style = SculTypography.Caption1,
                 color = SculColor.BLACK,
             )
@@ -207,7 +210,7 @@ fun WriteReviewScreen(
                         .size(80.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop,
-                    model = it, 
+                    model = it,
                     contentDescription = "",
                 )
             }
