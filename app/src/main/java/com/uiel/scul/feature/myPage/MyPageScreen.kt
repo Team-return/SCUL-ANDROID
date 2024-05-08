@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,8 @@ fun MyPageScreen(
     navController: NavController,
     viewModel: MyPageViewModel = viewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     var isDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -91,7 +94,7 @@ fun MyPageScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "강해민님",
+                    text = "${uiState.name}님",
                     style = SculTypography.Heading3,
                     color = SculColor.BLACK,
                 )
