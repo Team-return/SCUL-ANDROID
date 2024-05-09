@@ -73,11 +73,7 @@ fun DetailScreen(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = SculIcon.Search),
-                contentDescription = "",
-            )
+            // 이미지 로드
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -141,7 +137,7 @@ fun DetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(4.dp)
-                    .background(SculColor.GRAY50)
+                    .background(SculColor.GRAY50),
             )
             TabLayout(
                 uiState = uiState,

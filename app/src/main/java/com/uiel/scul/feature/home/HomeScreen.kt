@@ -24,12 +24,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,12 +50,19 @@ import androidx.navigation.NavController
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.skydoves.landscapist.glide.GlideImage
 import com.uiel.scul.R
 import com.uiel.scul.designSystem.foundation.SculColor
 import com.uiel.scul.designSystem.foundation.SculIcon
 import com.uiel.scul.designSystem.foundation.SculTypography
 import com.uiel.scul.model.culture.FetchCultureResponse
+import com.uiel.scul.network.Retrofit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 
 @Composable
@@ -66,6 +73,21 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching {
+                Retrofit.usersApi.getImage(
+                    image = "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1708992268823K9FSITBI6ZV5QXVOC3BWB93WH",
+                )
+            }.onSuccess {
+
+            }.onFailure {
+                Log.d("TEST", it.toString())
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             Image(
@@ -102,7 +124,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
             ) {
-                if(uiState.culture.isEmpty()) {
+                if (uiState.culture.isEmpty()) {
                     items(10) {
                         LoadingShimmerEffect()
                     }
@@ -116,7 +138,6 @@ fun HomeScreen(
                         )
                     }
                 }
-
             }
         }
     }
@@ -153,14 +174,8 @@ private fun ItemCard(
                 horizontal = 16.dp,
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.End,
     ) {
-//        Image(
-//            modifier = Modifier
-//                .fillMaxHeight(),
-//            painter = painterResource(id = R.drawable.ic_logo),
-//            contentDescription = "",
-//        )
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor {
                 val originalRequest = it.request()
@@ -176,29 +191,23 @@ private fun ItemCard(
         val imageLoader = ImageLoader.Builder(context)
             .okHttpClient(okHttpClient)
             .build()
-        AsyncImage(
-            modifier = Modifier.fillMaxHeight(),
-            model = ImageRequest.Builder(context)
-                .data("https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1708992268823K9FSITBI6ZV5QXVOC3BWB93WH")
-                //.addHeader("Accept","")
-                //.addHeader("Host","yeyak.seoul.go.kr")
-                //.addHeader("User-Agent","PostmanRuntime/7.38.0")
-                .crossfade(true)
-                .build(),
-            contentDescription = "",
-            onError = {
-                Log.d("TEST", it.toString())
-            },
-            error = painterResource(id = SculIcon.Logout),
-            imageLoader = imageLoader,
-        )
-        GlideImage(
-            imageModel = "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1708992268823K9FSITBI6ZV5QXVOC3BWB93WH",
 
-            )
+//        AsyncImage(
+//            modifier = Modifier.size(80.dp),
+//            model = ImageRequest.Builder(context)
+//                .data("https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1708992268823K9FSITBI6ZV5QXVOC3BWB93WH")
+//                .addHeader("Accept", "image/*")
+//                .crossfade(true)
+//                .build(),
+//            contentDescription = "",
+//            onError = {
+//                Log.d("TEST", it.result.throwable.message.toString())
+//            },
+//            error = painterResource(id = SculIcon.Logout),
+//            imageLoader = imageLoader,
+//        )
         Spacer(modifier = Modifier.width(16.dp))
-        Column(
-        ) {
+        Column {
             Text(
                 text = uiState.placeName,
                 style = SculTypography.SB3,
@@ -235,7 +244,9 @@ private fun ItemCard(
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Row {
+            Row(
+                modifier = Modifier.width(250.dp)
+            ) {
                 uiState.wantedPeople.split(",").apply {
                     this.forEach {
                         Text(
@@ -251,12 +262,12 @@ private fun ItemCard(
                             text = it,
                             style = SculTypography.Body3,
                             color = SculColor.WHITE,
+                            maxLines = 1,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                     }
                 }
             }
-
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
