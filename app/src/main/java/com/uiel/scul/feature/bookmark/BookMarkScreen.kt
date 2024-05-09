@@ -76,6 +76,20 @@ fun BookMarkScreen(
                 color = SculColor.BLACK,
             )
             Spacer(modifier = Modifier.height(24.dp))
+            if(uiState.culture.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = "북마크가 없습니다.",
+                        style = SculTypography.SB1,
+                        color = SculColor.GRAY500,
+                    )
+                }
+            }
             LazyColumn(
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
