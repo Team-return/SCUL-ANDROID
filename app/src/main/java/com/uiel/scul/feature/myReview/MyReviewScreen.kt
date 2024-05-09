@@ -1,6 +1,7 @@
 package com.uiel.scul.feature.myReview
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -63,6 +64,20 @@ fun MyReviewScreen(
                     .height(1.dp)
                     .background(color = SculColor.GRAY100)
             )
+            if(uiState.reviewList.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = "작성한 리뷰가 없습니다.",
+                        style = SculTypography.SB1,
+                        color = SculColor.GRAY500,
+                    )
+                }
+            }
             LazyColumn {
                 items(uiState.reviewList.size) {
                     MyWriteReviewItem(uiState = uiState.reviewList[it])
