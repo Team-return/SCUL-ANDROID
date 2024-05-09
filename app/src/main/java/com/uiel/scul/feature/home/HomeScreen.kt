@@ -74,20 +74,6 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching {
-                Retrofit.usersApi.getImage(
-                    image = "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1708992268823K9FSITBI6ZV5QXVOC3BWB93WH",
-                )
-            }.onSuccess {
-
-            }.onFailure {
-                Log.d("TEST", it.toString())
-            }
-        }
-    }
-
     Scaffold(
         topBar = {
             Image(
