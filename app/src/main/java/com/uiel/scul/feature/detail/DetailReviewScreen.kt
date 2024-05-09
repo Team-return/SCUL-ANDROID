@@ -124,7 +124,7 @@ private fun NoReview(
                     horizontal = 56.dp,
                     vertical = 12.dp,
                 ),
-            onClick = { navController.navigate("write/{$placeName}/{$cultureId}") },
+            onClick = { navController.navigate("write/$placeName/{$cultureId}") },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SculColor.MAIN400,
