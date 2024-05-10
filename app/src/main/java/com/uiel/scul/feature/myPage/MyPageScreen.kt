@@ -209,8 +209,8 @@ private fun LogOutDialog(
     ) {
         Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp),
+                .fillMaxWidth(),
+                //.height(150.dp),
             shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.cardColors(
                 containerColor = SculColor.WHITE,
@@ -230,7 +230,7 @@ private fun LogOutDialog(
                     style = SculTypography.Body2,
                     color = SculColor.GRAY900,
                 )
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(24.dp))
                 Row {
                     Button(
                         modifier = Modifier.weight(1f),
