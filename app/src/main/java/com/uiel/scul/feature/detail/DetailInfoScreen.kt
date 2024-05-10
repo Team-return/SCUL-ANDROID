@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -164,6 +165,7 @@ fun DetailInfoScreen(
                     vertical = 24.dp,
                 ),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End,
         ) {
             Text(
                 text = "혹시 이 곳을 다녀오셨나요?",
@@ -187,9 +189,10 @@ fun DetailInfoScreen(
                 onClick = { navController.navigate("write/${uiState.placeName}/$cultureId") }
             ) {
                 Text(
-                    text = "리뷰 작성하기",
+                    text = "리뷰 작성",
                     style = SculTypography.Body1,
                     color = SculColor.WHITE,
+                    maxLines = 1,
                 )
             }
         }
@@ -239,5 +242,4 @@ private fun Location(
             )
         }
     }
-
 }
