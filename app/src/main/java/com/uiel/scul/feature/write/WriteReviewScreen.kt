@@ -1,5 +1,6 @@
 package com.uiel.scul.feature.write
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +52,7 @@ fun WriteReviewScreen(
     navController: NavController,
     viewModel: WriteReviewViewModel = viewModel(),
 ) {
+    val event = viewModel.event
     val context = LocalContext.current
     var content by remember { mutableStateOf("") }
 
@@ -57,6 +60,17 @@ fun WriteReviewScreen(
         contract = ActivityResultContracts.PickMultipleVisualMedia(),
         onResult = viewModel::addUris,
     )
+
+    LaunchedEffect(event) {
+        event.collect {
+            when(it) {
+                is WriteReviewViewModel.Event.Back -> {
+                    Toast.makeText(context,"리뷰가 작성되었습니다",Toast.LENGTH_SHORT).show()
+                    navController.navigateUp()
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
