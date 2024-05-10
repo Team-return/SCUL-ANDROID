@@ -12,4 +12,6 @@ data class FetchMyReviewResponse(
     val writer: String,
     val content: String,
     val createdAt: String,
+    val imageUrls: List<String>,
+    val placeName: String,
 )

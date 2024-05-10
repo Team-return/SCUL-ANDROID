@@ -6,11 +6,13 @@ import com.uiel.scul.model.review.WriteReviewRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ReviewApi {
 
     //리뷰 작성
+    @POST("scul/reviews/{culture-id}")
     suspend fun writeReview(
         @Header("Authorization") authorization: String,
         @Path("culture-id") cultureId: String,
