@@ -2,6 +2,7 @@ package com.uiel.scul.feature.write
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.FormBody
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -56,25 +58,33 @@ class WriteReviewViewModel : ViewModel() {
 
     private fun createImg(
         files: List<File>,
+        cultureId: String,
+        content: String,
     ) = viewModelScope.launch(Dispatchers.IO) {
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
 
-        files.forEachIndexed { index, file ->
-            requestBody.addFormDataPart(
-                name = "file$index",
-                filename = file.name,
-                body = create("multipart/form-data".toMediaTypeOrNull(), file)
-            )
+        files.forEach {
+            requestBody
+                .addFormDataPart(
+                    name = "image",
+                    filename = it.name,
+                    body = create("application/octet-stream".toMediaTypeOrNull(), it),
+                )
+                .build()
         }
         runCatching {
             cultureApi.createImage(
                 file = requestBody.build()
             )
         }.onSuccess {
-            it.imageUrls.forEach { uri ->
-                urls.add(uri)
-            }
+            review(
+                cultureId = cultureId,
+                content = content,
+                url = it.imageUrls
+            )
+        }.onFailure {
+            Log.d("TEST", it.toString())
         }
     }
 
@@ -92,24 +102,35 @@ class WriteReviewViewModel : ViewModel() {
             )
         }
         createImg(
-            files = files
+            files = files,
+            cultureId = cultureId,
+            content = content,
         )
+    }
+
+    private suspend fun review(
+        cultureId: String,
+        content: String,
+        url: List<String>,
+    ) {
         runCatching {
             reviewApi.writeReview(
                 authorization = accessToken,
                 cultureId = cultureId,
                 writeReviewRequest = WriteReviewRequest(
                     content = content,
-                    imageUrls = urls,
-                )
+                    imageUrls = url,
+                    placeName = "",
+                ),
             )
         }.onSuccess {
-
+            _event.emit(Event.Back)
+        }.onFailure {
+            Log.d("TEST",it.toString())
         }
     }
 
     sealed interface Event {
-        data object MaxScreenshotCount : Event
-        data object Exist : Event
+        data object Back: Event
     }
 }
